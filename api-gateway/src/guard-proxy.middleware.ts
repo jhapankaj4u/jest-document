@@ -23,6 +23,24 @@ export function createGuardedProxy(target: string, routePrefix: string) {
       pathRewrite: {
         [`^${routePrefix}`]: '',
       },
+      on: {
+          error: (error, req, res) => {
+            console.error(`Proxy error for ${target}:`, error.message);          
+            res.end(JSON.stringify({ error: 'Proxy error', details: error.message }));
+          },
+          proxyReq: (proxyReq, req, res) => {
+            if (
+              req['body'] &&
+              Object.keys(req['body']).length &&
+              req.headers['content-type']?.includes('application/json')
+            ) {
+              const bodyData = JSON.stringify(req['body']);
+              proxyReq.setHeader('Content-Type', 'application/json');
+              proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+              proxyReq.write(bodyData);
+            }
+          }
+       }
     });
 
     return proxy(req, res, next);
