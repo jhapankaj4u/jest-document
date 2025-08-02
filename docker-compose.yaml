@@ -1,0 +1,44 @@
+version: '3.3'
+
+services:
+  auth-service:
+      build: .
+      ports:
+        - '3001:3001'
+      environment:
+        - DB_HOST=postgres
+        - DB_PORT=5432
+        - DB_USERNAME=user
+        - DB_PASSWORD=strongpassword
+        - DB_NAME=users
+        - JWT_SECRET=mysecret
+      depends_on:
+        - postgres
+      volumes:
+        - .:/app
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: document
+      POSTGRES_USER: document
+      POSTGRES_PASSWORD: strongpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432" # Expose PostgreSQL port to the host
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ct.pankaj@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: strongpassword
+      PGADMIN_LISTEN_PORT: 81
+    ports:
+      - "8081:81" # Access pgAdmin on http://localhost:8080
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
