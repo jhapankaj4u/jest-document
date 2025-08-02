@@ -2,6 +2,7 @@ import { Controller, Post, Body, UnauthorizedException, Req } from '@nestjs/comm
 import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config'
+import Redis from 'ioredis';
 
 @Controller('auth')
 export class UserController {
@@ -23,14 +24,19 @@ export class UserController {
   @Post('login')
   async login(@Req() req: Request , @Body() body: { email: string; password: string }) {
 
-    console.log('URL:', req.url);
-    console.log('Body:', body);
     const user = await this.userService.validateUser(body.email, body.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const token = this.jwtService.sign({ id: user.id, email: user.email, role: user.role },{ secret: this.configService.get('JWT_SECRET')});
-    console.log(token)
+    await this.userService.storeToken(user.id, token);
     return { token };
     
   }
+
+  @Post('logout')
+  async logout(@Body() body: { userId: string }) {
+    await this.userService.deleteToken(body.userId);
+    return { message: 'Logged out' };
+  }
+
 }

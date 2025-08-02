@@ -2,9 +2,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as jwt from 'jsonwebtoken';
+import redis from './redis';
 
-export function createGuardedProxy(target: string, routePrefix: string) {
-  return (req: Request, res: Response, next: NextFunction) => {
+export  function createGuardedProxy(target: string, routePrefix: string) {
+  return async(req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -13,6 +14,11 @@ export function createGuardedProxy(target: string, routePrefix: string) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
       req.user = decoded;  
+      const expired = await redis.get(`auth:token:${token['sub']['id']}`);
+      if (expired) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+
     } catch (err) {
       return res.status(403).json({ message: 'Forbidden' });
     }
