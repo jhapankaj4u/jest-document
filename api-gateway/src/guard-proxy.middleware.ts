@@ -13,22 +13,24 @@ export  function createGuardedProxy(target: string, routePrefix: string) {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
+      if(!decoded){
+        return res.status(403).json({ message: 'Forbidden1' });
+      }
       req.user = decoded;  
-      const expired = await redis.get(`auth:token:${token['sub']['id']}`);
+      const expired = await redis.get(`auth:token:${token['id']}`);
       if (expired) {
-        return res.status(403).json({ message: 'Forbidden' });
+        return res.status(403).json({ message: 'Forbidden2' });
       }
 
     } catch (err) {
-      return res.status(403).json({ message: 'Forbidden' });
+      console.log(err);
+      return res.status(403).json({ message: 'Forbidden3' });
     }
 
     const proxy = createProxyMiddleware({
       target,
       changeOrigin: true,
-      pathRewrite: {
-        [`^${routePrefix}`]: '',
-      },
+      
       on: {
           error: (error, req, res) => {
             console.error(`Proxy error for ${target}:`, error.message);          

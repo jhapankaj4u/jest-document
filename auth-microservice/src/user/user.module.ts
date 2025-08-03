@@ -1,19 +1,15 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { JwtModule } from '@nestjs/jwt';
 import { User } from './user.model';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config'
 @Module({
   imports: [
-    SequelizeModule.forFeature([User]),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '24h' },
-    }),
+    SequelizeModule.forFeature([User])
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService , JwtService , ConfigService],
 })
 export class UserModule {}

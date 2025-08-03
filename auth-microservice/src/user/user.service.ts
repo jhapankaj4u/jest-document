@@ -26,10 +26,6 @@ export class UserService {
     return null;
   }
 
-  async findByEmail(email: string) {
-    return this.userModel.findOne({ where: { email } });
-  }
-
   async storeToken(userId: string, token: string): Promise<void> {
     await this.redis.set(`auth:token:${userId}`, token);
   }

@@ -3,9 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { RedisModule } from './redis.module';
-
+import { UserModule } from './users/user.module';
+ 
 @Module({
   imports: [
      ConfigModule.forRoot({
@@ -27,8 +26,8 @@ import { RedisModule } from './redis.module';
       inject: [ConfigService],
     }),
 
-    UserModule,
-    RedisModule
+    UserModule
+     
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,7 +2,6 @@ import { Controller, Post, Body, UnauthorizedException, Req } from '@nestjs/comm
 import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config'
-import Redis from 'ioredis';
 
 @Controller('auth')
 export class UserController {
