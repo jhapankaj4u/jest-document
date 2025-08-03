@@ -19,7 +19,7 @@ export class RoleMiddleware implements NestMiddleware {
       const decoded: any = this.jwtService.verify(token,{ secret :  process.env.JWT_SECRET || 'default_secret'});
       const allowedRoles = ['admin'] ; 
        
-      console.log(req.user)
+ 
       if (!allowedRoles.includes(decoded.role)) {
         return res.status(403).json({ message: 'Forbidden: Insufficient role' });
       }

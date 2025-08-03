@@ -6,6 +6,8 @@ import redis from './redis';
 
 export  function createGuardedProxy(target: string, routePrefix: string) {
   return async(req: Request, res: Response, next: NextFunction) => {
+
+     
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -37,6 +39,7 @@ export  function createGuardedProxy(target: string, routePrefix: string) {
             res.end(JSON.stringify({ error: 'Proxy error', details: error.message }));
           },
           proxyReq: (proxyReq, req, res) => {
+            console.log(req['body'])
             if (
               req['body'] &&
               Object.keys(req['body']).length &&

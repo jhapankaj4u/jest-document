@@ -47,8 +47,8 @@ export class AppModule {
     )
     .forRoutes({ path: '/auth/*', method: RequestMethod.ALL });
     consumer
-      .apply(createGuardedProxy(process.env.DOCUMENT_SERVICE, '/document'))
-      .forRoutes({ path: '/document/*', method: RequestMethod.ALL });
+      .apply(createGuardedProxy(process.env.DOCUMENT_SERVICE, '/documents'))
+      .forRoutes({ path: '/documents/*', method: RequestMethod.ALL });
 
     consumer
       .apply(createGuardedProxy(process.env.USER_SERVICE, '/user'))

@@ -1,4 +1,4 @@
-import { Controller, Patch, Param, Body} from '@nestjs/common';
+import { Controller, Patch, Param, Body, InternalServerErrorException} from '@nestjs/common';
 import { UserService } from './user.service';
  
 @Controller('user')
@@ -11,8 +11,13 @@ export class UserController {
     @Param('id') userId: string,
     @Body('role') role: string 
   ) {
-    
-    await this.userService.updateRole(userId,role)
-    return { message: `Role for user updated to ${role}` };
+
+    try{
+      await this.userService.updateRole(userId,role)
+    }catch(err){
+      throw new InternalServerErrorException('Unable to delete file');
+    }
+     return { message:"File has been deleted successfully" }
+   
   }
 }
