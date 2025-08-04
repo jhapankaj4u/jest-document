@@ -9,6 +9,9 @@ This repository contains the backend services for the  document upload with role
   - [Auth Service](#auth-service)
   - [User Service](#user-service)
   - [Document Service](#document-service)
+- [Databases and Redis](#databases)
+  - [Redis](#redish)
+  - [PostgreSQL](#postgresql)
 
 ---
 
@@ -44,5 +47,18 @@ Situated in the `user-microserice` directory, this service handles to assign rol
 ### Document Service
 
 Situated in the `document-microserices` directory, this service handles CURD operation for Document uploads
+
+---
+
+## Databases and Redis
+
+### Redis
+
+- Used for storing token for login/logout and blacklist token
+
+
+### PostgreSQL
+
+- Used for storing relational data to manage user and documents
 
 ---
