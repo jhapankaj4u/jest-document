@@ -12,6 +12,10 @@ This repository contains the backend services for the  document upload with role
 - [Databases and Redis](#databases-and-redis)
   - [Redis](#redis)
   - [PostgreSQL](#postgresql)
+- [Configuration Files](#configuration-files)
+  - [Docker Compose](#docker-compose)
+  - [PostgreSQL Configuration](#postgresql-configuration)
+  - [Redis Configuration](#redis-configuration)
 
 ---
 
@@ -60,5 +64,47 @@ Situated in the `document-microserices` directory, this service handles CURD ope
 ### PostgreSQL
 
 - Used for storing relational data to manage user and documents
+
+---
+
+## Databases
+
+### MongoDB
+
+- Used for storing unstructured and semi-structured data.
+- Defined in `docker-compose.yml` as the `mongodb` service.
+- The `mongo-init.sh` script initializes the database with required configurations.
+
+### PostgreSQL
+
+- Used for storing relational data.
+- Defined in `docker-compose.yml` as the `postgres` service.
+- **pgAdmin** is included for managing PostgreSQL databases via a web interface.
+
+---
+
+## Configuration Files
+
+### Docker Compose
+
+The `docker-compose.yml` file orchestrates the various services and dependencies:
+
+- **Services**:
+  - `api-gateway`
+  - `auth-service`
+  - `post-service`
+  - `postgres`: Relational database.
+  - `redis`: In-memory caching and pub/sub.
+  - `pgadmin`: Web-based UI for managing PostgreSQL.
+
+
+### PostgreSQL Configuration
+
+- Environment variables for the database (username, password, database name) are set in `docker-compose.yml`.
+- pgAdmin allows database administration via a web UI, accessible at `http://localhost:5050`.
+
+### Redis Configuration
+
+The `redis.conf` file provides custom configurations for the Redis service to optimize performance and persistence settings.
 
 ---
