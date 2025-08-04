@@ -15,9 +15,9 @@ export class UserController {
     try{
       await this.userService.updateRole(userId,role)
     }catch(err){
-      throw new InternalServerErrorException('Unable to delete file');
+      throw new InternalServerErrorException(' Unable to assign role ');
     }
-     return { message:"File has been deleted successfully" }
+     return { message:"Role has been assigned successfully" }
    
   }
 }

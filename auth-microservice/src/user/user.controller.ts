@@ -1,14 +1,13 @@
 import { Controller, Post, Body, UnauthorizedException, Req, BadRequestException,  InternalServerErrorException } from '@nestjs/common';
 import { UserService } from './user.service';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config'
+
 
 @Controller('auth')
 export class UserController {
 
   constructor(
     private userService: UserService,
-    private jwtService: JwtService,
     private configService: ConfigService
   ) {}
 
@@ -33,10 +32,8 @@ export class UserController {
 
       const user = await this.userService.validateUser(body.email, body.password);
       if (!user) throw new UnauthorizedException('Invalid credentials');
-
-      const token = this.jwtService.sign({ id: user.id, email: user.email, role: user.role },{ secret: this.configService.get('JWT_SECRET')});
-      await this.userService.storeToken(user.id, token);
-      return { token };
+      const token = await this.userService.signToken(user, this.configService.get('JWT_SECRET'));    
+       return { token };
 
     }catch(err){
       throw new InternalServerErrorException('Unable to login');
@@ -45,8 +42,10 @@ export class UserController {
   }
 
   @Post('logout')
-  async logout(@Body() body: { userId: string }) {
-    await this.userService.deleteToken(body.userId);
+  async logout(@Req() req: Request) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    await this.userService.deleteToken(token, this.configService.get('JWT_SECRET'));
     return { message: 'Logged out' };
   }
 

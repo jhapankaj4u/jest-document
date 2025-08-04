@@ -22,13 +22,12 @@ export class DocumentsService {
 
     let docs = await this.documentModel.findOne({ where :{ id : id}});
     if(!docs) throw new NotFoundException("Document not found");
-    
     docs.title= title;
     docs.filename = file.filename,
     docs.path = file.path
     docs.mimetype = file.mimetype
 
-    return docs.save;
+    return await docs.save();
 
   }
 
