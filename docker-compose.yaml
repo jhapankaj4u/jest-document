@@ -1,39 +1,48 @@
-version: '3.3'
+version: '3.8'
 
 services:
- 
-  postgres:
-    image: postgres:16-alpine
-    restart: always
-    environment:
-      POSTGRES_DB: document
-      POSTGRES_USER: document
-      POSTGRES_PASSWORD: strongpassword
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
     ports:
-      - "5435:5432" # Expose PostgreSQL port to the host
-      
-  redis:
-    image: redis:latest
-    container_name: redis
-    restart: always
-    ports:
-      - "6379:6379"
-    command: [ "redis-server", "--appendonly", "yes" ]
-       
-
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ct.pankaj@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: strongpassword
-      PGADMIN_LISTEN_PORT: 81
-    ports:
-      - "8081:81" # Access pgAdmin on http://localhost:8080
+      - '3000:3000'
     depends_on:
-      - postgres
+      - auth-service
+      - user-service
+      - document-service
+    networks:
+      - microservices-network
 
-volumes:
-  postgres_data:
+  auth-service:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    networks:
+      - microservices-network
+
+  user-service:
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    ports:
+      - '3002:3002'
+    networks:
+      - microservices-network
+
+  document-service:
+    build:
+      context: ./document
+      dockerfile: Dockerfile
+    volumes:
+      - ./document/uploads:/app/uploads
+    ports:
+      - '3003:3003'
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
