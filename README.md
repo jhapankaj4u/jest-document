@@ -4,6 +4,11 @@ This repository contains the backend services for the  document upload with role
 
 - [Architecture Overview](#architecture-overview)
 
+- [Services](#services)
+  - [API Gateway](#api-gateway)
+  - [Auth Service](#auth-service)
+  - [User Service](#user-service)
+  - [Document Service](#document-service)
 
 ---
 
