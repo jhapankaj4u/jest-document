@@ -11,8 +11,7 @@ export interface IUserService{
   register(email: string, password: string): Promise<User>
   signToken(user, secrate:string): Promise<string>;
   validateUser(email: string, password: string): Promise<User>;
-  storeToken(userId: string, token: string): Promise<void>;
-  deleteToken(token: string , secrate : string): Promise<void>
+   deleteToken(token: string , secrate : string): Promise<void>
 }
 
 @Injectable()
@@ -44,7 +43,7 @@ export class UserService implements IUserService {
     return null;
   }
 
-  async storeToken(userId: string, token: string): Promise<void> {
+  private async storeToken(userId: string, token: string): Promise<void> {
     await this.redis.set(`auth:token:${userId}`, token);
     console.log(await this.redis.get(`auth:token:${userId}`))
   }
