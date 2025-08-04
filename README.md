@@ -9,8 +9,8 @@ This repository contains the backend services for the  document upload with role
   - [Auth Service](#auth-service)
   - [User Service](#user-service)
   - [Document Service](#document-service)
-- [Databases and Redis](#databases)
-  - [Redis](#redish)
+- [Databases and Redis](#databases-and-redis)
+  - [Redis](#redis)
   - [PostgreSQL](#postgresql)
 
 ---
