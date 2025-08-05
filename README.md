@@ -91,4 +91,8 @@ To run the application locally:
    git clone git@github.com:jhapankaj4u/jest-document.git
 
 3. Run DockerFile
-4. Run migration for DB   
+4. copy env.sample to .env and update configurations
+5. Run migration for DB  - npm run migrate && npm run seed
+6. Run npm start
+7. Cop 
+
