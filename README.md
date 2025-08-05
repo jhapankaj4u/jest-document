@@ -93,6 +93,7 @@ To run the application locally:
 3. Run DockerFile
 4. copy env.sample to .env and update configurations
 5. Run migration for DB  - npm run migrate && npm run seed
-6. Run npm start
-7. Cop 
+6. Import document_postman.json file from root into postman and test
+6. Run docker.compose -d up
+
 
