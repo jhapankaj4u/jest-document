@@ -1,6 +1,7 @@
 import { Injectable ,Inject, NotFoundException } from '@nestjs/common';
 import { InjectModel,  } from '@nestjs/sequelize';
 import { User } from './user.model';
+import { Op } from 'sequelize';
 
 
 @Injectable()
@@ -16,6 +17,10 @@ export class UserService {
 
     user.role = role;
     return await user.save();
+    }
+
+    async getUsers(){
+      return await this.userModel.findAll({});
     }
 
 }

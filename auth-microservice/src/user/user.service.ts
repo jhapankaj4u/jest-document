@@ -25,12 +25,11 @@ export class UserService implements IUserService {
 
     return this.userModel.create({ email, password: hash });
   }
-
-  async signToken(user, secrate:string) : Promise<string> {
+  async signToken(user, secrate:string) : Promise<any> {
 
     const token = this.jwtService.sign({ id: user.id, email: user.email, role: user.role },{ secret: secrate});
     await this.storeToken(user.id, token);
-    return token;
+    return {token: token , role:user.role};
   }
 
   async validateUser(email: string, password: string): Promise<User> {

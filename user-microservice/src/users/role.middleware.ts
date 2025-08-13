@@ -23,7 +23,9 @@ export class RoleMiddleware implements NestMiddleware {
       if (!allowedRoles.includes(decoded.role)) {
         return res.status(403).json({ message: 'Forbidden: Insufficient role' });
       }
-      
+      (req as any).user = decoded;
+      console.log(req.user,'------',decoded)
+
       next();
     } catch (err) {
       return res.status(401).json({ message: 'Invalid token' });
