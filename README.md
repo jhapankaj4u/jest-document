@@ -16,7 +16,11 @@ This repository contains the backend services for the  document upload with role
   - [Docker Compose](#docker-compose)
   - [PostgreSQL Configuration](#postgresql-configuration)
   - [Redis Configuration](#redis-configuration)
+- [Envirnoment Files](#envirnoment-files) 
 - [Running the Application](#running-the-application)
+- [Loging and Monitoring the Application](#monitoring-the-application)
+- [Postman Collection](#postman-collection)
+
 ---
 
 ## Architecture Overview
@@ -27,8 +31,11 @@ The backend is structured into multiple services to promote scalability and main
 
 - **API Gateway**: Manages incoming requests and routes them to the appropriate services.
 - **Auth Service**: Handles user authentication and authorization.
-- **User Service**: Manages role assignment.
+- **User Service**: Manages role assignment. Admin can only do role management
 - **Document Service**: Manages CURD opertation for Document.
+- **PostgreSql**: Sql Database for storing the data. There is also migration file to migrate all tables
+- **Redis**: Redis used to manage token expiry and blacklisting  for logout
+- **Winston and Grafana**: Monitoring, loging and analytics.
 These services communicate asynchronously, ensuring a decoupled and resilient system.
 
 ---
@@ -59,11 +66,15 @@ Situated in the `document-microserices` directory, this service handles CURD ope
 ### Redis
 
 - Used for storing token for login/logout and blacklist token
+- Added into docker-compose-yml
 
 
 ### PostgreSQL
 
 - Used for storing relational data to manage user and documents
+- Migration files to migrate table and seeds
+- pgAdmin added to used postgress
+- All are in docker-compose.yml
 
 ---
 
@@ -78,7 +89,18 @@ The `docker-compose.yml` file orchestrates the various services and dependencies
   - `auth-service`
   - `user-service`
   - `document-service`
+  - `redis`
+  - `grafana`
+  - `postgres`
+  - `pgadmin`
 
+### PostgreSQL Configuration
+ - Environment variables for the database credential are  in docker-compose.yml
+ - Pgadmin is used for managing postgress by UI. Configuration are in docker-compose-yml
+
+
+### Redis Configuration 
+ - .env-smaple is on root configure redis credential. THis need to copy with .env file
 ---
 
 ## Running the Application
@@ -91,4 +113,18 @@ To run the application locally:
    git clone git@github.com:jhapankaj4u/jest-document.git
 
 3. Run DockerFile
-4. Run migration for DB   
+4. copy env.sample to .env and update configurations
+5. Run migration for DB  - npm run migrate && npm run seed
+6. Import document_postman.json file from root into postman and test
+7. Run docker.compose -d up
+---
+
+## Loging Application
+ - Winston is ised to logging into file for console and info.
+ - Grafana is used to log cloudbase and for monitor.
+
+---
+## Postman Collection
+ - Postman collection can be  used to test the all api. All methods and requests are there.
+ - This is on the root with name document_postman.json
+ - One admin user will be created on migration which is in postman collection.

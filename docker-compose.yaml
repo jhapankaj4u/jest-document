@@ -1,5 +1,4 @@
-version: '3.8'
-
+version: '3.3'
 services:
   api-gateway:
     build:
@@ -8,41 +7,84 @@ services:
     ports:
       - '3000:3000'
     depends_on:
-      - auth-service
-      - user-service
-      - document-service
+      - auth-microservice
+      - user-microservice
+      - document-microservice
     networks:
       - microservices-network
-
-  auth-service:
+  auth-microservice:
     build:
-      context: ./auth
+      context: ./auth-microservice
       dockerfile: Dockerfile
     ports:
       - '3001:3001'
     networks:
       - microservices-network
-
-  user-service:
+  user-microservice:
     build:
-      context: ./user
+      context: ./user-microservice
       dockerfile: Dockerfile
     ports:
       - '3002:3002'
     networks:
       - microservices-network
-
-  document-service:
+  document-microservice:
     build:
-      context: ./document
+      context: ./document-microservices
       dockerfile: Dockerfile
     volumes:
-      - ./document/uploads:/app/uploads
+      - './document/uploads:/app/uploads'
     ports:
       - '3003:3003'
     networks:
       - microservices-network
-      
+  redis:
+    image: 'redis:latest'
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command:
+      - redis-server
+      - '--appendonly'
+      - 'yes'
+    networks:
+      - microservices-network
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - '3005:3000'
+    networks:
+      - microservices-network
+  postgres:
+    image: 'postgres:16'
+    container_name: auth_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: document
+      POSTGRES_PASSWORD: strongpassword
+      POSTGRES_DB: document
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgres_data:/var/lib/postgresql/data'
+    networks:
+      - microservices-network
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+    networks:
+      - microservices-network
+volumes: 
+  postgres_data: 
 
 networks:
   microservices-network:

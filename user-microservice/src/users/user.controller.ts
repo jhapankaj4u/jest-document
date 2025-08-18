@@ -1,9 +1,15 @@
-import { Controller, Patch, Param, Body, InternalServerErrorException} from '@nestjs/common';
+import { Controller, Patch, Param, Body, InternalServerErrorException, Get, Req} from '@nestjs/common';
 import { UserService } from './user.service';
  
 @Controller('user')
 export class UserController {
   constructor( private readonly userService: UserService) {}
+
+  @Get()
+  getAll(@Req() req: Request) {
+  
+    return this.userService.getUsers();
+  }
 
   
   @Patch(':id')
@@ -20,4 +26,5 @@ export class UserController {
      return { message:"Role has been assigned successfully" }
    
   }
+ 
 }
