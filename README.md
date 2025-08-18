@@ -16,7 +16,14 @@ This repository contains the backend services for the  document upload with role
   - [Docker Compose](#docker-compose)
   - [PostgreSQL Configuration](#postgresql-configuration)
   - [Redis Configuration](#redis-configuration)
+  - [PostgreSQL Migration](#postgresql-configuration)
+- [Envirnoment Files](#envirnoment-files) 
 - [Running the Application](#running-the-application)
+- [Loging Application](#loging-the-application)
+- [Monitoring the Application](#monitoring-the-application)
+- [Securing the Application](#securing-the-application)
+- [Postman Collection](#postman-collection)
+
 ---
 
 ## Architecture Overview
@@ -27,8 +34,9 @@ The backend is structured into multiple services to promote scalability and main
 
 - **API Gateway**: Manages incoming requests and routes them to the appropriate services.
 - **Auth Service**: Handles user authentication and authorization.
-- **User Service**: Manages role assignment.
+- **User Service**: Manages role assignment. Admin can only do role management
 - **Document Service**: Manages CURD opertation for Document.
+- **PostgreSql**: Sql Database for storing the data. There is also migration file to migrate all tables
 These services communicate asynchronously, ensuring a decoupled and resilient system.
 
 ---
